@@ -95,7 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     StreamBuilder<DocumentSnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection("users")
-                            .doc(widget.obj.email)
+                            .doc(widget.obj.userid)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {

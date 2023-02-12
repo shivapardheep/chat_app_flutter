@@ -9,7 +9,7 @@ class StreamProviderService {
   Stream<List<UserStreamClass>> usersStreamData() {
     return fireStore
         .collection("users")
-        .where("email", isNotEqualTo: user!.email.toString())
+        .where("uid", isNotEqualTo: user!.uid.toString())
         .snapshots()
         .map((QuerySnapshot snapShot) => snapShot.docs
             .map((doc) =>

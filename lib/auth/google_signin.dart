@@ -28,7 +28,7 @@ class AuthServices {
   firebaseLogin(fAuth) async {
     FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
-    await fireStore.collection("users").doc(fAuth.user!.email).set({
+    await fireStore.collection("users").doc(fAuth.user!.uid).set({
       "uid": fAuth.user!.uid,
       "name": fAuth.user!.displayName,
       "email": fAuth.user!.email,
