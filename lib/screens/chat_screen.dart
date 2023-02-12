@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:chat_app/allConstants/color_constants.dart';
 import 'package:chat_app/classes/user_stream_class.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
+import '../allWidgets/messageBox.dart';
 import '../functions/utilits.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -40,9 +45,32 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image =
+        await picker.pickImage(source: ImageSource.gallery).then((file) {
+      if (file != null) {
+        uploadImage(File(file.path));
+      }
+    });
+    // if (image != null) {
+    //   FirebaseStorage.instance.ref("");
+    // }
+  }
+
+  uploadImage(File file) async {
+    String fileName = const Uuid().v1();
+    var ref =
+        FirebaseStorage.instance.ref().child("images").child("$fileName.jpg");
+    var uploadTask = await ref.putFile(file);
+    String imageUrl = await uploadTask.ref.getDownloadURL();
+    debugPrint(imageUrl);
+    addUser(user!.uid, widget.obj.userid, imageUrl, DateTime.now());
+  }
+
   @override
   void initState() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
@@ -162,32 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
-                  return ChatBubble(
-                    clipper: ChatBubbleClipper8(
-                        type: data["sender_id"] == user!.uid
-                            ? BubbleType.sendBubble
-                            : BubbleType.receiverBubble),
-                    alignment: data["sender_id"] == user!.uid
-                        ? Alignment.topRight
-                        : Alignment.topLeft,
-                    margin: const EdgeInsets.only(top: 20, right: 5, left: 5),
-                    backGroundColor: data["sender_id"] == user!.uid
-                        ? ColorConstants.primaryColor
-                        : Colors.white,
-                    child: Container(
-                      // color: Colors.green,
-                      constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width * 0.7,
-                      ),
-                      child: Text(
-                        data["msg"],
-                        style: TextStyle(
-                            color: data["sender_id"] == user!.uid
-                                ? Colors.white
-                                : Colors.black),
-                      ),
-                    ),
-                  );
+                  return ChatWidget(data, context, user);
                   // return messageBox(data, data["sender_id"] == user!.uid);
                 }).toList(),
               );
@@ -217,7 +220,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            pickImage();
+                          },
                           icon: const Icon(Icons.attach_file)),
                       IconButton(
                           onPressed: () {}, icon: const Icon(Icons.camera_alt)),

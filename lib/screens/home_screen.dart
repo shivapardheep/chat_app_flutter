@@ -45,9 +45,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     fireStore
         .doc(user!.email.toString())
         .update({"status": true})
-        .then((value) =>
-            print("----------------------------------------User upadted"))
-        .catchError((error) => print(
+        .then((value) {})
+        .catchError((error) => debugPrint(
             "-------------------------------------Failed to add user: $error"));
     super.initState();
   }
@@ -101,7 +100,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         shadowColor: Colors.transparent,
         centerTitle: true,
         title: const Text("WhatsApp"),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        actions: [
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              // Handle the selected value
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'addGroup',
+                child: const Text('create group'),
+                onTap: () {},
+              ),
+              PopupMenuItem(
+                value: 'item2',
+                child: Text('Settings'),
+                onTap: () {},
+              ),
+              PopupMenuItem(
+                value: 'item3',
+                child: Text('logout'),
+                onTap: () {},
+              ),
+            ],
+          ),
+        ],
       ),
       body: ListView.builder(
           itemCount: data.length,
