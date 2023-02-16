@@ -2,13 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class FunctionalityClass {
-  static String getId(myId, obj) {
+  static String createChatId(myId, obj) {
     if (myId.compareTo(obj) != 1) {
-      print("return is : $myId$obj");
       return "$myId$obj";
     } else {
-      print("return is : $obj$myId");
-
       return "$obj$myId";
     }
   }

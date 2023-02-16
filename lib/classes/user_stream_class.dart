@@ -4,6 +4,7 @@ class UserStreamClass {
   String? name;
   String? email;
   String? userid;
+  String? oneSignalId;
   String? photo;
   Timestamp? lastLoginTime;
 
@@ -11,6 +12,7 @@ class UserStreamClass {
     required this.name,
     required this.email,
     required this.userid,
+    required this.oneSignalId,
     required this.photo,
     required this.lastLoginTime,
   });
@@ -19,6 +21,7 @@ class UserStreamClass {
     name = json['name'] ?? "";
     email = json['email'] ?? "";
     userid = json['uid'] ?? "";
+    oneSignalId = json['OneSignalId'] ?? "";
     photo = json['photo'] ?? "";
     lastLoginTime = json['lastLoginTime'] ?? "";
   }

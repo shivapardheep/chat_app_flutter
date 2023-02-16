@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 class AuthServices {
   Future<void> signInWithGoogle() async {
@@ -27,9 +28,12 @@ class AuthServices {
 
   firebaseLogin(fAuth) async {
     FirebaseFirestore fireStore = FirebaseFirestore.instance;
+    final status = await OneSignal.shared.getDeviceState();
+    final String osUserID = status!.userId.toString();
 
     await fireStore.collection("users").doc(fAuth.user!.uid).set({
       "uid": fAuth.user!.uid,
+      "OneSignalId": osUserID.toString(),
       "name": fAuth.user!.displayName,
       "email": fAuth.user!.email,
       "photo": fAuth.user!.photoURL,

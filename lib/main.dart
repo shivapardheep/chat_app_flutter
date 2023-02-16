@@ -6,20 +6,16 @@ import 'package:chat_app/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      // options: const FirebaseOptions(
-      //     apiKey: "AIzaSyDpiBBbn3qE9ArT8JUnjL58mdAVhsynH_Q",
-      //     authDomain: "chat-app-6b687.firebaseapp.com",
-      //     projectId: "chat-app-6b687",
-      //     storageBucket: "chat-app-6b687.appspot.com",
-      //     messagingSenderId: "502771795436",
-      //     appId: "1:502771795436:web:c4556fd252757bf67d2cc9",
-      //     measurementId: "G-GN5V4E5NBJ"),
-      );
+  await Firebase.initializeApp();
+  OneSignal.shared.setAppId(
+    "69052860-6aa8-4abe-b1f2-1e9cbb7264d1",
+  );
+
   runApp(MultiProvider(
     providers: [
       StreamProvider<List<UserStreamClass>>(
