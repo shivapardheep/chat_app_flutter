@@ -1,4 +1,5 @@
 import 'package:chat_app/allConstants/color_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,17 @@ Drawer drawerWidget(BuildContext context, user) {
         (route) => false);
   }
 
+  CollectionReference fireStore =
+      FirebaseFirestore.instance.collection("users");
+
   logout() async {
+    fireStore
+        .doc(user!.uid.toString())
+        .update({"status": false})
+        .then((value) =>
+            print("dispose----------------------------------------User Added"))
+        .catchError((error) => print(
+            "dispose-------------------------------------Failed to add user: $error"));
     await FirebaseAuth.instance.signOut().then((value) => navToAuth());
   }
 
